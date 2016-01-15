@@ -2,7 +2,8 @@
   (:require [clj-http.client :as http]
             [clojure.pprint :as pprint]
             [clojure.xml :as xml])
-  (:import [java.io ByteArrayInputStream]))
+  (:import [java.io ByteArrayInputStream]
+           [java.nio.charset Charset]))
 
 (defrecord Credentials [user pass])
 
@@ -28,7 +29,7 @@
                                              (:pass auth)]})
                      :body)]
     (try (-> response
-             (.getBytes)
+             (.getBytes (Charset/forName "UTF-8"))
              (ByteArrayInputStream.)
              (xml/parse))
          (catch Exception e
