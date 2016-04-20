@@ -79,7 +79,12 @@
        (format "buildQueue?locator=project:%s")
        (net/rest-api-request server auth)))
 
-(defn test-occurences [server auth build-id offset limit]
+(defn test-occurences [server
+                       auth
+                       build-id
+                       & {:keys [offset limit]
+                          :or {offset 0
+                               limit 10000}}]
   "test statistics for given build"
   (->> (format "testOccurrences?locator=build:(id:%s),start:%s,count:%s"
                (str build-id)
