@@ -8,6 +8,12 @@
 
 (defrecord TeamCityServer [host port])
 
+(defn make-credentials [user pass]
+  (Credentials. user pass))
+
+(defn make-server [host & {:keys [port] :or {port 80}}]
+  (TeamCityServer. host port))
+
 (defn rest-api-url [server]
   (format "http://%s:%d/httpAuth/app/rest/"
           (str (:host server))
