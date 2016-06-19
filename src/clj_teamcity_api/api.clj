@@ -67,6 +67,13 @@
                (str since-build-id))
        (net/rest-api-request server auth)))
 
+(defn build-changes [server
+                     auth
+                     build-id]
+  (->> (format "changes?locator=build:(id:%s)"
+               (str build-id))
+       (net/rest-api-request server auth)))
+
 (defn build-type-queue [server auth build-type-id]
   "build queue for given agent"
   (->> build-type-id
