@@ -70,8 +70,13 @@
 (defn build-changes [server
                      auth
                      build-id]
-  (->> (format "changes?locator=build:(id:%s)"
-               (str build-id))
+  (->> (format "changes?locator=build:(id:%s)" (str build-id))
+       (net/rest-api-request server auth)))
+
+(defn changes [server
+               auth
+               change-id]
+  (->> (format "changes/id:%s" (str change-id))
        (net/rest-api-request server auth)))
 
 (defn build-type-queue [server auth build-type-id]
