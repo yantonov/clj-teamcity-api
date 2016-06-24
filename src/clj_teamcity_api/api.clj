@@ -111,6 +111,11 @@
   (->> (format "testOccurrences/%s" (str test-id))
        (net/rest-api-request server auth)))
 
+(defn build-resulting-properties [server
+                                  auth
+                                  build-id]
+  (->> (format "builds/id:%s/resulting-properties" (str build-id))
+       (net/rest-api-request server auth)))
 
 (defn agents [server auth]
   (->> (format "agents")
