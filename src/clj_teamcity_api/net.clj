@@ -14,16 +14,34 @@
 (defn make-server [host & {:keys [port] :or {port 80}}]
   (TeamCityServer. host port))
 
+(defn detect-schema [host]
+  (let [lhost (.toLowerCase host)]
+    (cond
+      (.startsWith lhost "http://") "http://"
+      (.startsWith lhost "https://") "https://"
+      true "http://")))
+
+(defn normalize-host [host]
+  (let [schema (detect-schema host)
+        normalized (if (.startsWith host schema)
+                     (.substring host (.length schema))
+                     host)]
+    (str schema normalized)))
+
 (defn rest-api-url [server]
-  (format "http://%s:%d/httpAuth/app/rest/"
-          (str (:host server))
-          (:port server)))
+  (let [{host :host
+         port :port
+         :or {port 80}} server]
+    (format "%s:%d/httpAuth/app/rest/" (normalize-host host) port)))
 
 (defn reboot-url [server build-type-id]
-  (format "http://%s:%d/remoteAccess/reboot.html?agent=%s&rebootAfterBuild=false"
-          (str (:host server))
-          (:port server)
-          build-type-id))
+  (let [{host :host
+         port :port
+         :or {port 80}} server]
+    (format "%s:%d/remoteAccess/reboot.html?agent=%s&rebootAfterBuild=false"
+            (normalize-host host)
+            port
+            build-type-id)))
 
 (defn rest-api-request [server
                         auth
